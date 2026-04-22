@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniChat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="main-container">
+        <header>
+            <img src="https://postimg.cc/LhxcKZKv" alt="Logo" class="main-logo">
+            <span class="brand">MiniChat</span>
+        </header>
+
+        <div id="screen-start">
+            <button id="btn-find">
+                <span class="material-icons">search</span> Поиск собеседника
+            </button>
+        </div>
+
+        <div id="screen-chat" class="hidden">
+            <div id="chat-window"></div>
+            <div class="input-area">
+                <button id="btn-stop" title="Завершить">
+                    <span class="material-icons">close</span>
+                </button>
+                <input type="text" id="msg-input" placeholder="Введите текст..." autocomplete="off">
+                <button id="btn-send">
+                    <span class="material-icons">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
