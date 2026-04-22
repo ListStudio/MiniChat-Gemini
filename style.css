@@ -1,0 +1,70 @@
+:root {
+    --bg: #0a0a0a;
+    --accent: #00ff41; /* Неоновый зеленый */
+    --text: #e0e0e0;
+    --panel: #1a1a1a;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+#main-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.main-logo { height: 30px; margin-right: 10px; }
+
+#chat-window {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.input-area {
+    display: flex;
+    background: var(--panel);
+    padding: 10px;
+    border-top: 1px solid #333;
+}
+
+input {
+    flex: 1;
+    background: #2a2a2a;
+    border: none;
+    color: white;
+    padding: 12px;
+    margin: 0 10px;
+    border-radius: 4px;
+}
+
+button {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+}
+
+button:hover { border-color: var(--accent); color: var(--accent); }
+
+#btn-stop:hover { border-color: #ff4c4c; color: #ff4c4c; }
+
+.hidden { display: none; }
