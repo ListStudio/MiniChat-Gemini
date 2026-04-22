@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MiniChat | Анонимный поиск</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #09090b;
+            --panel-dark: #18181b;
+            --accent-green: #22c55e;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border-color: #27272a;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            height: 100%; width: 100%;
+            overflow: hidden;
+        }
+
+        #app {
+            display: flex; flex-direction: column;
+            height: 100vh; max-width: 600px; margin: 0 auto;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* Шапка */
+        header {
+            padding: 15px 20px;
+            background: var(--panel-dark);
+            display: flex; align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo-group { display: flex; align-items: center; gap: 12px; }
+        .logo-img { height: 32px; width: 32px; border-radius: 6px; object-fit: cover; }
+        .brand-name { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--accent-green); }
+
+        /* Экраны */
+        .screen { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .hidden { display: none !important; }
+
+        /* Главный экран */
+        #welcome-screen { align-items: center; justify-content: center; text-align: center; padding: 40px; }
+        .promo-icon { font-size: 64px; color: var(--accent-green); margin-bottom: 20px; opacity: 0.8; }
+        .promo-text h2 { margin: 0 0 10px 0; font-weight: 600; }
+        .promo-text p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+        .btn-main {
+            margin-top: 30px;
+            background: var(--accent-green);
+            color: #000; border: none;
+            padding: 16px 32px; border-radius: 12px;
+            font-weight: 600; font-size: 1rem;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-main:active { transform: scale(0.96); }
+
+        /* Чат */
+        #chat-messages {
+            flex: 1; overflow-y: auto;
+            padding: 20px; display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 0.95rem; line-height: 1.4; }
+        .msg.partner { background: var(--panel-dark); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg.me { background: var(--accent-green); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        .system-msg { align-self: center; font-size: 0.8rem; color: var(--text-muted); margin: 10px 0; }
+
+        /* Поле ввода */
+        .input-bar {
+            padding: 15px; background: var(--panel-dark);
+            display: flex; align-items: center; gap: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        #message-input {
+            flex: 1; background: #27272a; border: 1px solid transparent;
+            border-radius: 10px; padding: 12px 15px; color: #fff; outline: none;
+        }
+        #message-input:focus { border-color: var(--accent-green); }
+
+        .icon-btn {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .icon-btn.send { color: var(--accent-green); }
+        .icon-btn.stop { color: #ef4444; }
+
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <header>
+        <div class="logo-group">
+            <img src="https://postimg.cc/LhxcKZKv" alt="MC" class="logo-img" onerror="this.src='https://via.placeholder.com/32/22c55e?text=M'">
+            <span class="brand-name">MiniChat</span>
+        </div>
+        <div id="online-counter" style="font-size: 0.8rem; color: var(--text-muted);">
+            <span class="material-icons" style="font-size: 12px; vertical-align: middle;">fiber_manual_record</span> Online
+        </div>
+    </header>
+
+    <div id="welcome-screen" class="screen">
+        <span class="material-icons promo-icon">bolt</span>
+        <div class="promo-text">
+            <h2>Анонимный чат</h2>
+            <p>Никаких регистраций, фото и войсов.<br>Только текстовое общение.</p>
+        </div>
+        <button id="start-search" class="btn-main">
+            <span class="material-icons">search</span> Найти собеседника
+        </button>
+    </div>
+
+    <div id="chat-screen" class="screen hidden">
+        <div id="chat-messages">
+            </div>
+        <div class="input-bar">
+            <button id="stop-chat" class="icon-btn stop" title="Закончить">
+                <span class="material-icons">logout</span>
+            </button>
+            <input type="text" id="message-input" placeholder="Напишите сообщение..." autocomplete="off">
+            <button id="send-msg" class="icon-btn send">
+                <span class="material-icons">send</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    // Здесь будет твоя логика из предыдущего сообщения
+    // Главное — проверь адрес сервера Render!
+    const socket = io('ТВОЙ_АДРЕС_НА_RENDER'); 
+
+    const welcome = document.getElementById('welcome-screen');
+    const chat = document.getElementById('chat-screen');
+    const startBtn = document.getElementById('start-search');
+    const stopBtn = document.getElementById('stop-chat');
+
+    startBtn.onclick = () => {
+        startBtn.innerHTML = '<span class="material-icons">sync</span> Ищем...';
+        socket.emit('find_partner');
+    };
+
+    socket.on('chat_started', () => {
+        welcome.classList.add('hidden');
+        chat.classList.remove('hidden');
+    });
+
+    stopBtn.onclick = () => {
+        if(confirm('Завершить этот диалог?')) {
+            socket.emit('stop_chat');
+            location.reload(); // Простой способ сбросить чат
+        }
+    };
+</script>
+
+</body>
+  </html>
